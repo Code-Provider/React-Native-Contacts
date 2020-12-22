@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 const Background = ({ children }) => (
     <View style={styles.background}>
     <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <StatusBar style="light"></StatusBar>
+        
       {children}
     </KeyboardAvoidingView>
     </View>

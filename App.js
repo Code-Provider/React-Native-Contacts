@@ -6,19 +6,28 @@ import { theme } from './src/core/theme' ;
 import StartScreen from './src/screens/StartScreen' ; 
 import LoginScreen from './src/screens/LoginScreen' ; 
 import RegisterScreen from './src/screens/RegisterScreen' ; 
+import ContactScreen from './src/screens/ContactScreen' ; 
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen' ; 
 import { NavigationContainer } from '@react-navigation/native' ;
 import { createStackNavigator } from '@react-navigation/stack' ; 
+import './src/firebase/firebase.js' ; 
+import {auth} from './src/firebase/firebase.js' ; 
+
+
 
 
 
 export default function App() {
+  const user = auth.currentUser ; 
+  const primary = () => user ? "ContactScreen" : "StartScreen" ; 
+
   const Stack = createStackNavigator() ; 
   return (
     <Provider theme={theme}>
+      {console.log(primary())}
       <NavigationContainer>
     <Stack.Navigator
-          initialRouteName="StartScreen"
+          initialRouteName={primary()}
           screenOptions={{
             headerShown: false,
           }}
@@ -26,6 +35,7 @@ export default function App() {
     <Stack.Screen name="StartScreen" component={StartScreen} />
     <Stack.Screen name="LoginScreen" component={LoginScreen} />  
     <Stack.Screen name="RegisterScreen" component={RegisterScreen} />  
+    <Stack.Screen name="ContactScreen" component={ContactScreen} />  
     <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />  
     </Stack.Navigator>
     </NavigationContainer>

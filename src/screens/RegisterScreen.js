@@ -11,11 +11,15 @@ import { theme } from '../core/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
+import * as auth from '../firebase/auth'
 
-const RegisterScreen = ({ navigation }) => {
+
+const RegisterScreen = ({ navigation}) => {
   const [name, setName] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
+
+  
 
   const onSignUpPressed = () => {
     const nameError = nameValidator(name.value)
@@ -27,14 +31,18 @@ const RegisterScreen = ({ navigation }) => {
       setPassword({ ...password, error: passwordError })
       return
     }
+    //Firebase save and authenticate
+    auth.doCreateUserWithEmailAndPassword(email.value, password.value)
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Dashboard' }],
+      routes: [{ name: 'StartScreen' }],
     })
   }
 
   return (
+   
     <Background>
+      
       <BackButton goBack={navigation.goBack} />
       <Logo />
       <Header>Create Account</Header>

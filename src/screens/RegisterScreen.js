@@ -12,12 +12,15 @@ import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
 import * as auth from '../firebase/auth'
+import * as db from '../firebase/db'
+
 
 
 const RegisterScreen = ({ navigation}) => {
   const [name, setName] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
+  const [phone, setPhone] = useState({ value: '', error: '' })
 
   
 
@@ -32,7 +35,8 @@ const RegisterScreen = ({ navigation}) => {
       return
     }
     //Firebase save and authenticate
-    auth.doCreateUserWithEmailAndPassword(email.value, password.value)
+    auth.doCreateUserWithEmailAndPassword(name.value, email.value, password.value)
+
     navigation.reset({
       index: 0,
       routes: [{ name: 'StartScreen' }],
@@ -68,12 +72,20 @@ const RegisterScreen = ({ navigation}) => {
       />
       <TextInput
         label="Password"
-        returnKeyType="done"
+        returnKeyType="next"
         value={password.value}
         onChangeText={(text) => setPassword({ value: text, error: '' })}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
+      />
+      <TextInput
+        label="Phone"
+        returnKeyType="done"
+        value={phone.value}
+        onChangeText={(text) => setPhone({ value: text, error: '' })}
+        error={!!phone.error}
+        errorText={phone.error}
       />
       <Button
         mode="contained"

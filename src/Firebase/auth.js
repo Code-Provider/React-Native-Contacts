@@ -1,10 +1,11 @@
-import { auth } from './firebase'
+import { fb } from './firebase'
+import * as db from './db'
 
-export const doCreateUserWithEmailAndPassword = (email, password) => {
-  auth.createUserWithEmailAndPassword(email, password).then((user) => {
-    // Signed in 
-    // ...
-  })
+
+export const doCreateUserWithEmailAndPassword = (name, email, password) => {
+  fb.auth().createUserWithEmailAndPassword(email, password).then((user) => {
+     db.doCreateUser(user.user.uid, name,email)
+   })
   .catch((error) => {
     var errorCode = error.code;
     var errorMessage = error.message;

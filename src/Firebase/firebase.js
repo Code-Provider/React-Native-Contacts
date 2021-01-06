@@ -9,13 +9,13 @@ import "firebase/database";
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: 'AIzaSyBU4nr_VEyAh5FinXM8rKgOdI3AbuRwCUQ',
-  authDomain: 'contacts-1bc1a.firebaseapp.com',
-  databaseURL: 'https://contacts-1bc1a-default-rtdb.europe-west1.firebasedatabase.app',
-  projectId: 'contacts-1bc1a',
-  storageBucket: 'contacts-1bc1a.appspot.com',
-  messagingSenderId: '252460536349',
-
+  apiKey: "AIzaSyDLi7nVl9jPTs-yUGUlalT1TTZpZrNxvFI",
+  authDomain: "contacts-cdafc.firebaseapp.com",
+  projectId: "contacts-cdafc",
+  storageBucket: "contacts-cdafc.appspot.com",
+  messagingSenderId: "649834157282",
+  appId: "1:649834157282:web:be6cf1eaff9a0557d9babb",
+  databaseURL: "https://contacts-cdafc-default-rtdb.firebaseio.com"
 };
 
 if (!firebase.apps.length) {
@@ -23,7 +23,8 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-const auth = firebase.auth(); 
-const database = firebase.database  ;  
 
-export {auth, database} ; 
+const fb = firebase ; 
+
+
+export {fb} ; 

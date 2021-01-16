@@ -1,5 +1,5 @@
 //this is going to store Firebase realtime database API code
-import { fb } from "./firebase";
+import { fb } from "./fire";
 
 
 //##########3 user API

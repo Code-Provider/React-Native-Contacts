@@ -1,4 +1,4 @@
-import { fb } from './firebase'
+import { fb } from './fire.js'
 import * as db from './db'
 
 

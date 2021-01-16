@@ -10,16 +10,15 @@ import ContactScreen from './src/screens/ContactScreen' ;
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen' ; 
 import { NavigationContainer } from '@react-navigation/native' ;
 import { createStackNavigator } from '@react-navigation/stack' ; 
-import './src/firebase/firebase.js' ; 
-import {auth} from './src/firebase/firebase.js' ; 
+import {fb} from './src/firebase/fire' 
 
 
 
 
 
 export default function App() {
-  const user = auth.currentUser ; 
-  const primary = () => user ? "ContactScreen" : "StartScreen" ; 
+  const user = fb.auth().currentUser ; 
+  const primary = () => user ? "ContactScreen" : "ContactScreen" ; 
 
   const Stack = createStackNavigator() ; 
   return (

@@ -6,6 +6,7 @@ import Header from '../components/Header'
 import TextInput from '../components/TextInput'
 import Button from '../components/Button'
 import { emailValidator } from '../helpers/emailValidator'
+import * as auth from '../firebase/auth'
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState({ value: '', error: '' })
@@ -16,6 +17,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
       setEmail({ ...email, error: emailError })
       return
     }
+    auth.doPasswordReset(email.value) 
     navigation.navigate('LoginScreen')
   }
 

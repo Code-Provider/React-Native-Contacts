@@ -1,8 +1,9 @@
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
 
-const Logo = () => (
-  <Image source={require('../assets/logo.png')} style={styles.image} />
+const Logo = (props) => (
+  <Image source={require('../assets/logo.png')} style={styles.image} 
+  {...props} />
 )
 
 const styles = StyleSheet.create({

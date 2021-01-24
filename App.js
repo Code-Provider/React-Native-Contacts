@@ -7,6 +7,7 @@ import StartScreen from './src/screens/StartScreen' ;
 import LoginScreen from './src/screens/LoginScreen' ; 
 import RegisterScreen from './src/screens/RegisterScreen' ; 
 import ContactScreen from './src/screens/ContactScreen' ; 
+import OneContactScreen from './src/screens/OneContactScreen' ; 
 import CreateContactScreen from './src/screens/CreateContactScreen' ;
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen' ; 
 import { NavigationContainer } from '@react-navigation/native' ;
@@ -19,7 +20,7 @@ import {fb} from './src/firebase/fire'
 
 export default function App() {
   const user = fb.auth().currentUser ; 
-  const primary = () => user ? "CreateContactScreen" : "CreateContactScreen" ; 
+  const primary = () => user ? "ContactScreen" : "ContactScreen" ; 
 
   const Stack = createStackNavigator() ; 
   return (
@@ -38,6 +39,7 @@ export default function App() {
     <Stack.Screen name="ContactScreen" component={ContactScreen} />  
     <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />  
     <Stack.Screen name="CreateContactScreen" component={CreateContactScreen} />  
+    <Stack.Screen name="OneContactScreen" component={OneContactScreen} />  
     </Stack.Navigator>
     </NavigationContainer>
     </Provider>

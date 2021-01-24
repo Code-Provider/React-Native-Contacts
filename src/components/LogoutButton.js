@@ -2,8 +2,8 @@ import React from 'react'
 import { TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 
-const BackButton = ({ goBack }) => (
-  <TouchableOpacity onPress={goBack}>
+const LogoutButton = ({ logout }) => (
+  <TouchableOpacity onPress={logout}>
     <Image style={styles.image} source={require('../assets/logout.png')} />
   </TouchableOpacity>
 )
@@ -15,4 +15,4 @@ const styles = StyleSheet.create({
     },
   })
 
-export default BackButton
+export default LogoutButton

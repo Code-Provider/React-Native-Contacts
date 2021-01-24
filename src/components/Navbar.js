@@ -4,12 +4,12 @@ import {Header } from 'react-native-elements';
 import LogoutButton from './LogoutButton'
 import AddContactButton from './AddContactButton' 
 
-const Navbar = (props) => (
+const Navbar = ({Add, Logout, ...props}) => (
     <Header 
     containerStyle = {StyleSheet.flatten(styles.navbar)}
   centerComponent={{ text: 'Contacts', style: { color: '#000', fontSize :15, fontWeight: "bold" } }}
-  rightComponent={<AddContactButton/>}
-  leftComponent={<LogoutButton />}
+  rightComponent={<AddContactButton Add = {Add}/>}
+  leftComponent={<LogoutButton Logout = {Logout}/>}
     />
 
 )

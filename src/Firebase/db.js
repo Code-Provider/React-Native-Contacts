@@ -14,6 +14,20 @@ export const doCreateUser = (id, name, email) => {
 
 }
 
+export const doCreateContact = (userid, contactid, contact) => {
+  fb.database().ref('/contacts/' + userid).child(contactid).set(contact) ; 
+}
+
+
+
+export const doGetContacts = (userid) => {
+  fb.database().ref('/contacts/' + userid).once("value").then((snapshot) => {
+    let contacts = snapshot.val()
+
+  })
+
+}
+
 
   //returns all users from firebase realtime db
 export const onceGetUsers = () => db.ref("users").once("value");

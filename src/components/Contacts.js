@@ -3,6 +3,8 @@ import { StyleSheet, View } from 'react-native'
 import {ListItem, Avatar } from 'react-native-elements';
 
 
+
+
 const list = [
     {
       name: 'Amy Farha',
@@ -17,22 +19,25 @@ const list = [
 
 ];
 
-const Contacts = () => (
+const Contacts = ({contacts, gotoContact}) =>{ 
+
+    
+    return (
     <View>
     {
-        list.map((l, i) => (
-        <ListItem key={i} bottomDivider containerStyle={StyleSheet.flatten(styles.listitem)} >
-            <Avatar source={{uri: l.avatar_url}} />
+        Object.keys(contacts).map((l, i) => (
+        <ListItem key={i} bottomDivider containerStyle={StyleSheet.flatten(styles.listitem)} onPress = {() => gotoContact(contacts[l])}>
+            <Avatar source={{uri: contacts[l].imageurl ? contacts[l].imageurl : require('../assets/logo.png')}} />
             <ListItem.Content>
-            <ListItem.Title>{l.name}</ListItem.Title>
-            <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
+            <ListItem.Title>{contacts[l].name}</ListItem.Title>
+            <ListItem.Subtitle>{contacts[l].description}</ListItem.Subtitle>
             </ListItem.Content>
             <ListItem.Chevron />
         </ListItem>
         ))
        }
     </View>
-)
+)}
 
 const styles = StyleSheet.create({
     listitem : {
@@ -42,3 +47,17 @@ const styles = StyleSheet.create({
     })
 
 export default Contacts ;  
+
+
+/*
+list.map((l, i) => (
+        <ListItem key={i} bottomDivider containerStyle={StyleSheet.flatten(styles.listitem)} >
+            <Avatar source={{uri: l.avatar_url}} />
+            <ListItem.Content>
+            <ListItem.Title>{l.name}</ListItem.Title>
+            <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
+            </ListItem.Content>
+            <ListItem.Chevron />
+        </ListItem>
+
+*/

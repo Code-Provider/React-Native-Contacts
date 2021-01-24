@@ -12,7 +12,7 @@ import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
 import * as auth from '../firebase/auth'
-import * as db from '../firebase/db'
+
 
 
 

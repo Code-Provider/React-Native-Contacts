@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { View, StyleSheet, TouchableOpacity, Alert, Button } from 'react-native'
-import { Text } from 'react-native-paper'
-import Background from '../components/Background'
+import React, { useState, useEffect } from 'react'
+import { View, StyleSheet, TouchableOpacity, Alert, Button, Image, Platform } from 'react-native'
+import { Text, ProgressBar } from 'react-native-paper'
+import Background3 from '../components/Background3'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
 import But from '../components/Button'
@@ -11,7 +11,9 @@ import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { emailValidator2 } from '../helpers/emailValidator2'
 import { nameValidator } from '../helpers/nameValidator'
-import * as auth from '../firebase/auth'
+import { phoneValidator, phoneErrorIndex } from '../helpers/phoneValidator'
+import {fb} from '../firebase/fire'
+import * as ImagePicker from 'expo-image-picker';
 import * as db from '../firebase/db'
 
 
@@ -19,8 +21,22 @@ import * as db from '../firebase/db'
 const CreateContactScreen = ({ navigation}) => {
   const [name, setName] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
-  const [phone, setPhone] = useState([{phoneval : 'lmao', desc : 'lmao'}])
+  const [phone, setPhone] = useState([{phoneval : '', desc : ''}])
   const [description, setDescription] = useState('')
+  const [image, setImage] = useState(null)
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
+  const [contactid, setContactid] = useState(104)
+  const [phoneError, setPhoneError] = useState('')
+  const [phoneErrorArr, setPhoneErrorArr] = useState([]) 
+  //const userid = fb.auth().currentUser.uid; 
+  const userid = 100
+  
+  /*useEffect(() => {
+    setPhoneErrorArr(phoneErrorIndex(phone)); 
+  }, [phone]);
+  */
+
 
   /*const [arrphone, setArr] = useState([<View style={{ flexDirection:'row',  alignSelf: 'stretch' }}>
   <TextInput2 label="Phone"
@@ -38,21 +54,117 @@ const CreateContactScreen = ({ navigation}) => {
         value={phone.value[0].desc}
         onChangeText={(text) => console.log(text)} />
 </View>])*/
-  
-  const handleChoosePhoto = () => {
 
+useEffect(() => {
+  (async () => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
+  })();
+}, []);
+  
+const pickImage = async () => {
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
+
+  console.log(result);
+
+  if (!result.cancelled) {
+    setImage(result.uri);
   }
+};
+
+
+const uploadImage = async () => {
+  const uri  = image;
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  const filename = uri.substring(uri.lastIndexOf('/') + 1);
+  setUploading(true);
+  setTransferred(0);
+  const task = fb.storage()
+    .ref("Avatars")
+    .child(userid.toString())
+    .child(contactid.toString())
+    .put(blob)
+    
+    
+
+  // set progress state
+  task.on('state_changed', snapshot => {
+    setTransferred(
+      Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+    );
+  });
+  try {
+    await task;
+  } catch (e) {
+    console.error(e);
+  }
+  setUploading(false);
+  Alert.alert(
+    "Contact Created",
+    "Contact Successfully Created",
+    [    
+      { text: "OK", onPress: () => {setImage(null) ;
+       navigation.reset({
+        index: 0,
+        routes: [{ name: 'ContactScreen' }],
+      }) }
+    }
+    ]
+  );
+  //setImage(null);
+};
 
   const onCreatePressed = () => {
     const nameError = nameValidator(name.value)
     const emailError = emailValidator2(email.value)
-    if (emailError || nameError) {
+    const phoneError = phoneValidator(phone)
+    if (emailError || nameError || phoneError) {
       setName({ ...name, error: nameError })
       setEmail({ ...email, error: emailError })
+      setPhoneError(phoneError)
+      setPhoneErrorArr(phoneErrorIndex(phone)); 
       return
     }
+    const contact = {
+      name : name.value,
+      email : email.value,
+      phones : phone,
+      description : description,
+    }
 
-    Alert.alert(
+    db.doCreateContact(userid, contactid, contact)
+    if (image) {
+      fb.storage()
+      .ref("Avatars")
+      .child(userid.toString())
+      .child(contactid.toString()).getDownloadURL().then((url) => {
+        const contact = {
+          name : name.value,
+          email : email.value,
+          phones : phone,
+          description : description,
+          imageurl : url,
+        } 
+        db.doCreateContact(userid, contactid, contact);
+    });
+      uploadImage(); 
+    }
+      /*setImage(null);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'ContactScreen' }],
+      });
+      Alert.alert(
         "Contact Created",
         "Contact Successfully Created",
         [    
@@ -61,22 +173,26 @@ const CreateContactScreen = ({ navigation}) => {
             routes: [{ name: 'ContactScreen' }],
           }) }
         ],
-      );
+      );*/
+
+      return 
     
   }
 
   return (
    
-    <Background>
+    <Background3>
       
       <BackButton goBack={navigation.goBack} />
 
 
       <Header>Create Contact</Header>
-      <Logo style = {{marginBottom : 0, width: 110,
-        height: 110}}></Logo>
+      {image ? <Image source={{ uri: image }} style={{ width: 110, height: 110, marginBottom : 8 }} /> : <Logo style = {{marginBottom : 0, width: 110,
+        height: 110}}></Logo> }
+     
       <TouchableOpacity
-          underlayColor='#fff'>
+          underlayColor='#fff'
+          onPress = {() => pickImage()}>
           <Text>Choose Photo</Text>
         </TouchableOpacity>
       <TextInput
@@ -103,10 +219,12 @@ const CreateContactScreen = ({ navigation}) => {
       {
       
       phone.map((value, index) => { return (
-        <View style={{ flexDirection:'row',  alignSelf: 'stretch' }}>
+        <View style={{ flexDirection:'row',  alignSelf: 'stretch' }} key = {'view'+index}>
         <TextInput2 label="Phone"
               returnKeyType="done"
               key = {'phone'+index}
+              error={!!phoneErrorArr[index]}
+              errorText={phoneErrorArr[index]}
               onChangeText={(text) => {
                 let arr = [...phone] ;
                 let item = phone[index] ;
@@ -180,7 +298,15 @@ const CreateContactScreen = ({ navigation}) => {
       >
         Create Contact
       </But>
-    </Background>
+
+      {uploading && image? (
+          <View style={styles.progressBarContainer}>
+            <ProgressBar progress={transferred} width={300} />
+          </View>
+        ) : null}
+
+      
+    </Background3>
   )
 }
 
@@ -197,7 +323,18 @@ const styles = StyleSheet.create({
     backgroundColor : 'white',
     color : 'black',
   },
+  progressBarContainer: {
+    marginTop: 20
+  },
 
 })
+
+/*
+{uploading && image? (
+          <View style={styles.progressBarContainer}>
+            <Progress.Bar progress={transferred} width={300} />
+          </View>
+        ) : null}
+        */
 
 export default CreateContactScreen

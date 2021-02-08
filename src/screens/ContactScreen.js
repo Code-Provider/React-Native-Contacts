@@ -11,13 +11,23 @@ import {doSignOut} from '../firebase/auth'
 
 
 
-const ContactScreen = ({ navigation }) => {
+const ContactScreen = ({ navigation, route }) => {
     
     const [search, setSearch] = useState({ value: '', error: '' })
     const [contacts, setContacts] = useState({}) ;
     const [searchedContacts, setSearchedContacts] = useState({}) ; 
     const [bool, setBool] = useState(true) ; 
 
+    const userid = 100 ; 
+    const user= route.params.user;
+
+
+    /*if (!user) { 
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'StartScreen' }],
+        })
+    }*/
 
     
     Object.filter = (obj, predicate) => 
@@ -25,10 +35,12 @@ const ContactScreen = ({ navigation }) => {
           .filter( key => predicate(obj[key]) )
           .reduce( (res, key) => Object.assign(res, { [key]: obj[key] }), {} );
           
-
-    fb.database().ref('/contacts/' + 100).once("value").then((snapshot) => {
+    
+    fb.database().ref('/contacts/' + userid).once("value").then((snapshot) => {
         setContacts(snapshot.val())
     });
+
+    
 
     const updateSearch = (src) => {
         setBool(false) ; 
@@ -48,16 +60,17 @@ const ContactScreen = ({ navigation }) => {
     
 
     const logout = () => {
-        doSignOut() ; 
+        fb.auth().signOut(); 
         navigation.reset({
             index: 0,
             routes: [{ name: 'StartScreen' }],
         })
     }
 
-    const gotoContact = (contact) => {
+    const gotoContact = (contact, contactid) => {
         navigation.navigate('OneContactScreen', {
             Contact : contact,
+            ContactId : contactid,
         }); 
     }
 
@@ -68,7 +81,7 @@ const ContactScreen = ({ navigation }) => {
             value={search.value}>
             </Searchbar>
            
-           <Contacts contacts = {bool ? contacts :  searchedContacts } gotoContact = {(contact) => gotoContact(contact)}></Contacts>
+           <Contacts contacts = {bool ? contacts :  searchedContacts } gotoContact = {(contact, contactid) => gotoContact(contact, contactid)}></Contacts>
            
         </Background>
         

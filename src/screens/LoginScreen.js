@@ -15,6 +15,7 @@ import * as auth from '../firebase/auth'
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
+  const [error, setError] = useState('')  
 
   const onLoginPressed = () => {
     const emailError = emailValidator(email.value)
@@ -25,12 +26,23 @@ const LoginScreen = ({ navigation }) => {
       return
     }
 
-    auth.doSignInWithEmailAndPassword(email.value, password.value) ; 
+    auth.doSignInWithEmailAndPassword(email.value, password.value).then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'ContactScreen', params :  {user : user} }],
+      })
+    })
+    .catch((error) => {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+    }); 
     //FireBase Auth Treatment
-    navigation.reset({
+    /*navigation.reset({
       index: 0,
       routes: [{ name: 'ContactScreen' }],
-    })
+    })*/
   }
 
   return (

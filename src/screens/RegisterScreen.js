@@ -35,7 +35,7 @@ const RegisterScreen = ({ navigation}) => {
       return
     }
     //Firebase save and authenticate
-    auth.doCreateUserWithEmailAndPassword(name.value, email.value, password.value)
+    auth.doCreateUserWithEmailAndPassword(name.value, email.value, password.value, phone.value)
 
     navigation.reset({
       index: 0,

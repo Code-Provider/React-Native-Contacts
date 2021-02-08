@@ -26,8 +26,8 @@ const Contacts = ({contacts, gotoContact}) =>{
     <View>
     {
         Object.keys(contacts).map((l, i) => (
-        <ListItem key={i} bottomDivider containerStyle={StyleSheet.flatten(styles.listitem)} onPress = {() => gotoContact(contacts[l])}>
-            <Avatar source={{uri: contacts[l].imageurl ? contacts[l].imageurl : require('../assets/logo.png')}} />
+        <ListItem key={i} bottomDivider containerStyle={StyleSheet.flatten(styles.listitem)} onPress = {() => gotoContact(contacts[l], l)}>
+            <Avatar source={contacts[l].imageurl && contacts[l].imageurl != '' ? {uri : contacts[l].imageurl} : require('../assets/logo.png')} />
             <ListItem.Content>
             <ListItem.Title>{contacts[l].name}</ListItem.Title>
             <ListItem.Subtitle>{contacts[l].description}</ListItem.Subtitle>

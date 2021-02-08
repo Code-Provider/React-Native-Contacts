@@ -8,30 +8,69 @@ import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Paragraph from '../components/Paragraph'
 import Phones from '../components/Phones'
+import {fb} from '../firebase/fire'
+import { useIsFocused } from "@react-navigation/native"
+
+
 
 
 const OneContactScreen = ({ navigation, route }) => {
-    
-    const {Contact} = route.params;
+    const {Contact, ContactId} = route.params;
+    const [contact, setContact] = useState(Contact) ;
+    const userid = 100 ;
 
-    console.log(Contact.phones)
+    const isFocused = useIsFocused();
+
+    useEffect(() => {
+        fb.database().ref('/contacts/' + userid +'/' + ContactId).once("value").then((snapshot) => {
+            setContact(snapshot.val())
+        });
+    }, []);
+
+    useEffect(() => {
+        if(isFocused){
+        fb.database().ref('/contacts/' + userid +'/' + ContactId).once("value").then((snapshot) => {
+            setContact(snapshot.val())
+        });
+    }
+        
+    }, [isFocused]);
+
+
+
+
+    const OnDeletePress = () => {
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'ContactScreen' }],
+          })
+        fb.database().ref('/contacts/' + 100 + '/'+ContactId).remove() ; 
+          
+      }
+
+    const onUpdatePress = () => {
+        navigation.navigate('UpdateContactScreen', {Contact : contact, ContactId : ContactId})
+    }
     
+
+
 
     return (
         <Background>
             <BackButton goBack = {navigation.goBack}>
             </BackButton>
-            {Contact.imageurl ? (<Image source={Contact.imageurl} style={{ width: 110, height: 110, marginBottom : 8 }} />) : (<Logo style = {{marginBottom : 0, width: 110,
+            {Contact.imageurl && Contact.imageurl != '' ?  (<Image source={{uri : contact.imageurl}} style={{ width: 110, height: 110, marginBottom : 8 }} />) : (<Logo style = {{marginBottom : 0, width: 110,
             height: 110}}></Logo>) }
-            <Header>{Contact.name}</Header>
+            <Header>{contact.name}</Header>
             <Paragraph>
-            {Contact.description}
+            {contact.description}
             </Paragraph>
-            <Phones phones = {Contact.phones}></Phones>
-            <Button mode="contained">
+            <Phones phones = {contact.phones}></Phones>
+            <Button mode="contained"
+            onPress = {onUpdatePress}>
             Update Contact Information
             </Button>
-            <Button
+            <Button onPress = {OnDeletePress}
             mode="outlined">
             
             Delete Contact

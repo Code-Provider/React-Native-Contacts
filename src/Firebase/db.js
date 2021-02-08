@@ -5,17 +5,22 @@ import { fb } from "./fire";
 //##########3 user API
 
 //create a user and store it at users/id path (it's an asynchronous func)
-export const doCreateUser = (id, name, email) => {
+export const doCreateUser = (id, name, email, phone) => {
 
   fb.database().ref('/users/' + id).set({
     name : name,
-    email : email 
+    email : email,
+    phone: phone
   }).then(() => console.log('Data set.'));
 
 }
 
 export const doCreateContact = (userid, contactid, contact) => {
   fb.database().ref('/contacts/' + userid).child(contactid).set(contact) ; 
+}
+
+export const doUpdateContact = (userid, contactid, contact) => {
+  fb.database().ref('/contacts/' + userid).child(contactid).update(contact) ; 
 }
 
 

@@ -2,8 +2,8 @@ import React from 'react'
 import { TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 
-const LogoutButton = ({ logout }) => (
-  <TouchableOpacity onPress={logout}>
+const LogoutButton = ({ Logout }) => (
+  <TouchableOpacity onPress={Logout}>
     <Image style={styles.image} source={require('../assets/logout.png')} />
   </TouchableOpacity>
 )

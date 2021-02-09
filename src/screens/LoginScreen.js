@@ -31,7 +31,7 @@ const LoginScreen = ({ navigation }) => {
       const user = userCredential.user;
       navigation.reset({
         index: 0,
-        routes: [{ name: 'ContactScreen', params :  {user : user} }],
+        routes: [{ name: 'ContactScreen', params :  {user : user.uid} }],
       })
     })
     .catch((error) => {

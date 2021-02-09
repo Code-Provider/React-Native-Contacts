@@ -71,6 +71,7 @@ const ContactScreen = ({ navigation, route }) => {
         navigation.navigate('OneContactScreen', {
             Contact : contact,
             ContactId : contactid,
+            user : user
         }); 
     }
 

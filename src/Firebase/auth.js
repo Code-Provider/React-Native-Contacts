@@ -21,7 +21,7 @@ export const doSignInWithEmailAndPassword = (email, password) =>
 export const doSignOut = () => fb.auth().signOut();
 
 
-export const doPasswordReset = email => auth.sendPasswordResetEmail(email);
+export const doPasswordReset = email => fb.auth().sendPasswordResetEmail(email);
 
 
 export const doPasswordChange = password =>

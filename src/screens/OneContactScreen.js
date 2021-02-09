@@ -10,13 +10,17 @@ import Paragraph from '../components/Paragraph'
 import Phones from '../components/Phones'
 import {fb} from '../firebase/fire'
 import { useIsFocused } from "@react-navigation/native"
+import ChatButton from '../components/ChatButton'
 
 
 
 
 const OneContactScreen = ({ navigation, route }) => {
-    const {Contact, ContactId} = route.params;
+    const {Contact, ContactId, user} = route.params;
     const [contact, setContact] = useState(Contact) ;
+    const [userhasphone, setUserhasphone] = useState(false)
+    const [otheruser, setOtheruser] = useState(null) ; 
+    const [otheruserid, setOtheruserid] = useState(0) ; 
     const userid = 100 ;
 
     const isFocused = useIsFocused();
@@ -24,6 +28,20 @@ const OneContactScreen = ({ navigation, route }) => {
     useEffect(() => {
         fb.database().ref('/contacts/' + userid +'/' + ContactId).once("value").then((snapshot) => {
             setContact(snapshot.val())
+            fb.database().ref('/users/').once("value").then((snapshot2) => {
+                let users = snapshot2.val()
+                contact.phones.map((l,i) => {
+                    Object.keys(users).map((k,j) => {
+                        if (contact.phones[i].phoneval == users[k].phone){
+                           setUserhasphone(true)
+                           setOtheruser = users[k] 
+                           otheruserid = k 
+                        }
+                    })
+                    
+                })
+
+            })
         });
     }, []);
 
@@ -59,6 +77,7 @@ const OneContactScreen = ({ navigation, route }) => {
         <Background>
             <BackButton goBack = {navigation.goBack}>
             </BackButton>
+            {userhasphone ? <ChatButton></ChatButton> : <></> }
             {Contact.imageurl && Contact.imageurl != '' ?  (<Image source={{uri : contact.imageurl}} style={{ width: 110, height: 110, marginBottom : 8 }} />) : (<Logo style = {{marginBottom : 0, width: 110,
             height: 110}}></Logo>) }
             <Header>{contact.name}</Header>

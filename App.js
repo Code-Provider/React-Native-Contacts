@@ -21,7 +21,7 @@ import {fb} from './src/firebase/fire'
 
 export default function App() {
   const user = fb.auth().currentUser ; 
-  const primary = () => user ? "StartScreen" : "StartScreen" ; 
+  const primary = () => user ? "ContactScreen" : "StartScreen" ; 
 
   const Stack = createStackNavigator() ; 
   return (

@@ -19,12 +19,12 @@ const list = [
 
 ];
 
-const Contacts = ({contacts, gotoContact}) =>{ 
+const Contacts = ({contacts, gotoContact, text}) =>{ 
 
     
     return (
     <View>
-    {
+    {   text == 'Contacts' ?
         Object.keys(contacts).map((l, i) => (
         <ListItem key={i} bottomDivider containerStyle={StyleSheet.flatten(styles.listitem)} onPress = {() => gotoContact(contacts[l], l)}>
             <Avatar source={contacts[l].imageurl && contacts[l].imageurl != '' ? {uri : contacts[l].imageurl} : require('../assets/logo.png')} />
@@ -35,7 +35,14 @@ const Contacts = ({contacts, gotoContact}) =>{
             <ListItem.Chevron />
         </ListItem>
         ))
-       }
+       : <ListItem bottomDivider containerStyle={StyleSheet.flatten(styles.listitem)} onPress = {() => gotoContact(contacts[l], l)}>
+           <Avatar source={require('../assets/logo.png')} />
+            <ListItem.Content>
+            <ListItem.Title>{'Imad Zinbi'}</ListItem.Title>
+            <ListItem.Subtitle>{'Friend'}</ListItem.Subtitle>
+            </ListItem.Content>
+            <ListItem.Chevron />
+           </ListItem>}
     </View>
 )}
 

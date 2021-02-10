@@ -2,8 +2,8 @@ import React from 'react'
 import { TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 
-const ChatButton = ({ Add }) => (
-  <TouchableOpacity onPress={Add} style={styles.container}> 
+const ChatButton = ({ onChatPress }) => (
+  <TouchableOpacity onPress={onChatPress} style={styles.container}> 
     <Image style={styles.image} source={require('../assets/text.png')} />
   </TouchableOpacity>
 )

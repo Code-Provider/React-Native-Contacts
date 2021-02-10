@@ -19,7 +19,7 @@ import * as db from '../firebase/db'
 
 
 const UpdateContactScreen = ({ navigation, route}) => {
-    const {Contact, ContactId} = route.params;
+    const {Contact, ContactId, user} = route.params;
 
   const [name, setName] = useState({ value: Contact.name, error: '' })
   const [email, setEmail] = useState({ value: Contact.email, error: '' })
@@ -32,7 +32,7 @@ const UpdateContactScreen = ({ navigation, route}) => {
   const [phoneError, setPhoneError] = useState('')
   const [phoneErrorArr, setPhoneErrorArr] = useState([]) 
   //const userid = fb.auth().currentUser.uid; 
-  const userid = 100
+  const userid = user;
   let bool = false ; 
   
 

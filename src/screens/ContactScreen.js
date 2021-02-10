@@ -12,14 +12,37 @@ import {doSignOut} from '../firebase/auth'
 
 
 const ContactScreen = ({ navigation, route }) => {
+
+    /*setChatContacts(Object.keys(snapshot.val()).map( obj=> ({ ...snapshot.val()[obj], chattable: 'false', phoneuser : '' })))
+    let ChatContacts2 = ChatContacts; 
+         fb.database().ref('/users/').once("value").then((snapshot2) => {
+            let users = snapshot2.val()
+            Object.keys(ChatContacts2).map((l, i)=>{
+                Object.keys(ChatContacts2[l].phones).map((p, w)=>{
+                    Object.keys(users).map((k,j) => {
+                    if (ChatContacts2[l].phones[p].phoneval == users[k].phone){
+                        ChatContacts2[l].chattable = true;
+                        ChatContacts2[l].phoneuser = users[k].phone;
+                    }
+                })
+            })
+             })
+             setChatContacts(ChatContacts2);
+         })*/
     
     const [search, setSearch] = useState({ value: '', error: '' })
     const [contacts, setContacts] = useState({}) ;
     const [searchedContacts, setSearchedContacts] = useState({}) ; 
     const [bool, setBool] = useState(true) ; 
+    //const [bool2, setBool2] = useState(false)
+    const [text, setText] = useState("Contacts")
+    //const [messages, setMessages] = useState([]) ; 
 
-    const userid = 100 ; 
-    const user= route.params.user;
+    
+    const userid= route.params.user;
+    const user = route.params.user;
+
+    
 
 
     /*if (!user) { 
@@ -36,11 +59,15 @@ const ContactScreen = ({ navigation, route }) => {
           .reduce( (res, key) => Object.assign(res, { [key]: obj[key] }), {} );
           
     
-    fb.database().ref('/contacts/' + userid).once("value").then((snapshot) => {
-        setContacts(snapshot.val())
+    fb.database().ref('contacts').child(userid).once("value").then((snapshot) => {
+         setContacts(snapshot.val())
     });
 
+
+
+
     
+
 
     const updateSearch = (src) => {
         setBool(false) ; 
@@ -68,21 +95,56 @@ const ContactScreen = ({ navigation, route }) => {
     }
 
     const gotoContact = (contact, contactid) => {
+
         navigation.navigate('OneContactScreen', {
+            user : user,
             Contact : contact,
             ContactId : contactid,
-            user : user
+            
         }); 
     }
 
+    const onPressText = () => {
+        if (text == "Contacts"){
+            setText("Chat")
+        }else if (text == "Chat"){
+            setText("Contacts")
+        }
+    }
+
+    /*useEffect(()=> {
+            fb.database().ref('messages').once("value").then((snapshot) => {
+                let arr = Object.keys(snapshot.val()) ; 
+                arr.filter(x => {
+                    x.includes(userid);
+                })
+                let arr2 = []
+                arr.map((x) => {
+                    
+                    fb.database().ref('messages').child(x).once("value").then((snapshot) => {
+                        const Message = snapshot.val().chats; 
+                        arr2.push(Message)
+                        
+                    })
+                })
+                setMessages(arr2);
+                console.log(messages)
+               
+            });
+
+        console.log("Value of text changed ! ")
+
+    }, [text]); */
+
     return (
         <Background>
-            <Navbar Add = {() => navigation.navigate('CreateContactScreen')} Logout = {() => logout()}></Navbar>
+            <Navbar Add = {() => navigation.navigate('CreateContactScreen2', {user : user})} onPressText = {() => onPressText()}
+            Logout = {() => logout()} text = {text}></Navbar>
            <Searchbar onChangeText={(src) => updateSearch(src)}
             value={search.value}>
             </Searchbar>
+           {contacts ? <Contacts contacts = {bool ? contacts :  searchedContacts } gotoContact = {(contact, contactid) => gotoContact(contact, contactid)} text = {text}></Contacts> : <></>}
            
-           <Contacts contacts = {bool ? contacts :  searchedContacts } gotoContact = {(contact, contactid) => gotoContact(contact, contactid)}></Contacts>
            
         </Background>
         

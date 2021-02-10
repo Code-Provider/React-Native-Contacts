@@ -21,9 +21,8 @@ const OneContactScreen = ({ navigation, route }) => {
     const [userhasphone, setUserhasphone] = useState(false)
     const [otheruser, setOtheruser] = useState(null) ; 
     const [otheruserid, setOtheruserid] = useState(0) ; 
-    const userid = 100 ;
-
     const isFocused = useIsFocused();
+    const userid = route.params.user
 
     useEffect(() => {
         fb.database().ref('/contacts/' + userid +'/' + ContactId).once("value").then((snapshot) => {
@@ -34,8 +33,8 @@ const OneContactScreen = ({ navigation, route }) => {
                     Object.keys(users).map((k,j) => {
                         if (contact.phones[i].phoneval == users[k].phone){
                            setUserhasphone(true)
-                           setOtheruser = users[k] 
-                           otheruserid = k 
+                           setOtheruser(users[k]) 
+                           setOtheruserid(k) 
                         }
                     })
                     
@@ -60,14 +59,18 @@ const OneContactScreen = ({ navigation, route }) => {
     const OnDeletePress = () => {
         navigation.reset({
             index: 0,
-            routes: [{ name: 'ContactScreen' }],
+            routes: [{ name: 'ContactScreen', params : {user :user} }],
           })
-        fb.database().ref('/contacts/' + 100 + '/'+ContactId).remove() ; 
+        fb.database().ref('/contacts/' + userid + '/'+ContactId).remove() ; 
           
       }
 
     const onUpdatePress = () => {
-        navigation.navigate('UpdateContactScreen', {Contact : contact, ContactId : ContactId})
+        navigation.navigate('UpdateContactScreen', {Contact : contact, ContactId : ContactId, user : user})
+    }
+
+    const onChatPress = () => {
+        navigation.navigate('ChatScreen', {Contact : contact, otheruser : otheruser, user : user, otheruserid : otheruserid})
     }
     
 
@@ -77,8 +80,8 @@ const OneContactScreen = ({ navigation, route }) => {
         <Background>
             <BackButton goBack = {navigation.goBack}>
             </BackButton>
-            {userhasphone ? <ChatButton></ChatButton> : <></> }
-            {Contact.imageurl && Contact.imageurl != '' ?  (<Image source={{uri : contact.imageurl}} style={{ width: 110, height: 110, marginBottom : 8 }} />) : (<Logo style = {{marginBottom : 0, width: 110,
+            {userhasphone ? <ChatButton onChatPress = {() => onChatPress()}></ChatButton> : <></> }
+            {contact.imageurl && contact.imageurl != '' ?  (<Image source={{uri : contact.imageurl}} style={{ width: 110, height: 110, marginBottom : 8 }} />) : (<Logo style = {{marginBottom : 0, width: 110,
             height: 110}}></Logo>) }
             <Header>{contact.name}</Header>
             <Paragraph>

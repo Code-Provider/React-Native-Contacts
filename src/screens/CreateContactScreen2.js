@@ -18,18 +18,18 @@ import * as db from '../firebase/db'
 
 
 
-const CreateContactScreen = ({ navigation}) => {
+const CreateContactScreen2 = ({ navigation, route}) => {
   const [name, setName] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
   const [phone, setPhone] = useState([{phoneval : '', desc : ''}])
   const [description, setDescription] = useState('')
   const [image, setImage] = useState(null)
-  const [contactid, setContactid] = useState(100000*Math.random().round)
+  const [contactid, setContactid] = useState(Math.round(Math.random() * 1000000))
   const [phoneError, setPhoneError] = useState('')
   const [phoneErrorArr, setPhoneErrorArr] = useState([]) 
   //const userid = fb.auth().currentUser.uid; 
-  const userid = 100
-  
+  const userid = route.params.user;
+  const user = route.params.user;
   /*useEffect(() => {
     setPhoneErrorArr(phoneErrorIndex(phone)); 
   }, [phone]);
@@ -145,7 +145,7 @@ const pickImage = async () => {
     db.doCreateContact(userid, contactid, contact)
     navigation.reset({
         index: 0,
-        routes: [{ name: 'ContactScreen' }],
+        routes: [{ name: 'ContactScreen' , params :  {user : user}}],
       })
       /*setImage(null);
       navigation.reset({
@@ -321,4 +321,4 @@ const styles = StyleSheet.create({
         ) : null}
         */
 
-export default CreateContactScreen
+export default CreateContactScreen2
